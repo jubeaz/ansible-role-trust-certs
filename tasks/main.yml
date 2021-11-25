@@ -1,0 +1,30 @@
+---
+- name: Get certificats list
+  find:
+    path: "{{ certificates_dir }}"
+    patterns: '*.pem, *.cert'
+  register: _certificates_files
+  delegate_to: localhost
+  run_once: true
+
+- name: copy root ca certificate on archlinux hosts
+  copy:
+    src: "{{ item.path }}"
+    dest: "{{ _ca_trust_certs_dest_dir }}"
+    owner: root
+    group: root
+    mode: 0644
+  with_items: "{{ _certificates_files.files }}"
+  when: ansible_distribution == 'Archlinux'
+  notify: Trust root ca Archlinux
+
+- name: copy root ca certificate on Ubuntu hosts
+  copy:
+    src: "{{ item.path }}"
+    dest: "{{ _ca_trust_certs_dest_dir }}/{{ item.path | basename }}.crt"
+    owner: root
+    group: root
+    mode: 0644
+  with_items: "{{ _certificates_files.files }}"
+  when: ansible_distribution == 'Ubuntu'
+  notify: Trust root ca Ubuntu
