@@ -1,0 +1,17 @@
+---
+- name: Create transfert directory
+  file:
+    path: "{{ _trust_certs_dir }}"
+    mode: "0777"
+    owner: root
+    group: root
+    state: directory
+  delegate_to: localhost
+  run_once: true
+
+- name: Get CA cert
+  fetch:
+    src: "{{ ca_base_dir }}/{{ ca_certs_dir }}//{{ ca_file_basename }}.pem" 
+    dest: "{{ _trust_certs_dir }}/"
+    flat: true
+

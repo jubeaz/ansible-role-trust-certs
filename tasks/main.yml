@@ -1,7 +1,11 @@
 ---
+- name: Include get_from_ca
+  include_tasks: get_from_ca.yml
+  when: inventory_hostname in groups[pki_group]
+
 - name: Get certificats list
   find:
-    path: "{{ certificates_dir }}"
+    path: "{{ _trust_certs_dir }}"
     patterns: '*.pem, *.cert'
   register: _certificates_files
   delegate_to: localhost
@@ -28,3 +32,8 @@
   with_items: "{{ _certificates_files.files }}"
   when: ansible_distribution == 'Ubuntu'
   notify: Trust root ca Ubuntu
+
+- name: Delete transfert directory
+  file:
+    path: "{{ _trust_certs_dir }}"
+    state: absent
