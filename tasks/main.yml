@@ -32,8 +32,3 @@
   with_items: "{{ _certificates_files.files }}"
   when: ansible_distribution == 'Ubuntu'
   notify: Trust root ca Ubuntu
-
-- name: Delete transfert directory
-  file:
-    path: "{{ _trust_certs_dir }}"
-    state: absent

@@ -9,4 +9,4 @@ _distribution_specific: {
 }
 _ca_trust_certs_dest_dir: "{{ _distribution_specific[ansible_distribution]._certs_dest_dir }}"
 
-_trust_certs_dir: /tmp/certs
+  #_trust_certs_dir: /tmp/certs
